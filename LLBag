@@ -1,0 +1,221 @@
+/*
+ * LLBag.java
+ * Mengting Bao
+ * Computer Science 112, Boston University
+ */
+
+import java.util.*;
+
+public class LLBag implements Bag {
+    private class Node {
+        private Object item;
+        private Node next;
+
+        private Node(Object i, Node n) {
+            item = i;
+            next = n;
+        }
+    }
+
+    // fields of the LLList object
+    private Node head;   // dummy head node
+    private int size;  // # of items in the list
+    
+    public LLBag(){
+        head = new Node(null, null);
+        size = 0;
+    }
+
+    public boolean add(Object i){
+        Node newNode = new Node(i, head.next);
+        //Node temp = head;
+        if (head == null){
+            head = newNode;
+        }
+        else{
+            // while (temp.next!=null){
+            //     temp = temp.next;
+            // }
+            head.next = newNode;
+            //newNode.next = 
+        }
+        size++;
+        return true;
+    }
+
+    public boolean remove(Object i){
+        Node trav = head.next;
+        Node trail = null;
+        //Node newNode = new Node(i, head.next);
+        if (trav == null){
+            //trav = newNode;
+            return false;
+        }
+        while (trav != null){
+            if (trav.item.equals(i)){
+                trail.next=trav.next;
+                size--;
+                return true;
+            }
+            trail = trav;
+            trav = trav.next;
+        }
+        return true;
+        // if (trav == null){
+        //     return false;
+        // }
+        // else{
+            // if (trav == head){
+            //     head = trav.next;
+            // }
+            // else{
+            //     trail.next = trav.next;
+            // }
+
+        // size--;
+        // return true;
+    }
+
+    public boolean contains(Object i){
+        Node trav = head.next;
+        while (trav != null){
+            if (trav.item.equals(i)){
+                return true;
+            }
+            trav = trav.next;
+        }
+        return false;
+    }
+
+    public int numItems(){
+        return size;
+    }
+
+    public Object grab(){
+        if (head == null){
+            throw new IllegalArgumentException("the bag is empty");
+        }
+        int whichOne = (int)(Math.random() * size);
+        Node trav = head;
+        Object grabItem = null;
+        for (int i=0; i<numItems(); i++){
+            if (i==whichOne){
+                grabItem = trav.item;
+            }
+            trav = trav.next;
+        }
+        return grabItem;
+    }
+
+    // if (numItems == 0) {
+    //     throw new IllegalStateException("the bag is empty");
+    // }
+    
+    // int whichOne = (int)(Math.random() * numItems);
+    // return items[whichOne];
+
+    // public Object grab(){
+    //     if (head == null){
+    //         return null;
+    //     }
+
+    // }
+
+    public Object[] toArray(){
+        Object[] arr = new Object[size];
+        int count = 0;
+        Node trav = head.next;
+        while (trav != null){
+            if (count>numItems()-1){
+                break;
+            }
+            arr[count] = trav.item;
+            trav = trav.next;
+            count++;
+        }
+        return arr;
+    }
+
+    public String toString(){
+        String str = "{";
+        Node trav = head.next;
+        while (trav!=null){
+            str = str + trav.item;
+            if (trav.next!=null){
+                str = str + ", ";
+            }
+            trav = trav.next;
+        }
+        str = str + "}";
+        return str;
+
+        // Node trav = head.next;    // skip over the dummy head node
+        // while (trav != null) {
+        //     str = str + trav.item;
+        //     if (trav.next != null) {
+        //         str = str + ", ";
+        //     }
+        //     trav = trav.next;
+        // }
+        
+        // str = str + "}";
+        // return str;
+
+        // String str = "{";
+        
+        // for (int i = 0; i < numItems; i++) {
+        //     str = str + items[i];
+        //     if (i != numItems - 1) {
+        //         str += ", ";
+        //     }
+        // }
+        
+        // str = str + "}";
+        // return str;
+    }
+
+    public static void main(String[] args) {
+        // Create a Scanner object for user input.
+        Scanner scan = new Scanner(System.in);
+        
+        // Create an ArrayBag named bag1.
+        System.out.print("number of items in bag 1: ");
+        int numItems = scan.nextInt();
+        Bag bag1 = new LLBag();
+        scan.nextLine();    // consume the rest of the line
+        
+        // Read in strings, add them to bag1, and print out bag1.
+        String itemStr;        
+        for (int i = 0; i < numItems; i++) {
+            System.out.print("item " + i + ": ");
+            itemStr = scan.nextLine();
+            boolean result = bag1.add(itemStr);
+            //System.out.println(result);
+        }
+        System.out.println("bag 1 = " + bag1);
+        System.out.println();
+        
+        // Select a random item and print it.
+        Object item = bag1.grab();
+        System.out.println("grabbed " + item);
+        System.out.println();
+        System.out.println(bag1);
+        
+        // Iterate over the objects in bag1, printing them one per line.
+        Object[] items = bag1.toArray();
+        for (int i = 0; i < items.length; i++) {
+            System.out.println(items[i]);
+        }
+        System.out.println();
+        
+        // Get an item to remove from bag1, remove it, and reprint the bag.
+        System.out.print("item to remove: ");
+        itemStr = scan.nextLine();
+        if (bag1.contains(itemStr)) {
+            bag1.remove(itemStr);
+        }
+        System.out.println("bag 1 = " + bag1);
+        System.out.println();
+
+    }
+}
